@@ -1,7 +1,7 @@
 name: netscope
 description: NetScope - Android DNS & Network Diagnostics
 publish_to: "none"
-version: 1.0.0+11
+version: 1.0.0+12
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.3.2
-  shared_preferences: ^2.3.5
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
