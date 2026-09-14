@@ -17,9 +17,9 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build apk --release
+      - run: flutter build apk --release --split-per-abi
       - uses: actions/upload-artifact@v4
         with:
-          name: NetScope-android-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: NetScope-android-release-apks
+          path: build/app/outputs/flutter-apk/app-*-release.apk
           if-no-files-found: error
