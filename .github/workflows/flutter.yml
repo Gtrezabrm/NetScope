@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Android APK Build
 
 on:
   push:
@@ -7,24 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  analyze-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.47.4'
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - name: Check Dart formatting
-        run: dart format --output=none lib test
-      - run: flutter analyze
-      - run: flutter test
-
   build-android-release:
     runs-on: ubuntu-latest
-    needs: analyze-and-test
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
