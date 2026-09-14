@@ -1,105 +1,165 @@
-# NetScope 🌐
+# 🌐 NetScope
 
-**Android network & DNS diagnostics for real-world connectivity.**
+> **Android-first DNS & network diagnostics — built to measure, not guess.**
 
-NetScope is an open-source Android-first diagnostic app designed to help users understand the quality, stability, and accessibility of their current internet connection — with particular attention to real-world conditions and gaming connectivity.
+[![Flutter](https://img.shields.io/badge/Flutter-Android--first-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](#)
+[![License](https://img.shields.io/badge/license-open--source-green)](#license)
 
-> Built by **Gtrezabrm** with a focus on honest measurements, clear explanations, and no fake "game ping" claims.
+## 💡 Why NetScope?
 
-## ✨ What NetScope does
+When an internet connection feels slow or unstable, DNS is often the first thing people change. But without measurement, it is difficult to know whether DNS is actually the problem.
 
-### 🧪 DNS Benchmark
-- Sends real DNS queries directly to the selected resolver.
-- Measures query latency, median, jitter, minimum/maximum latency, packet loss, and reliability.
-- Uses multiple domains to reduce the chance that one cached or unusual response dominates the result.
-- Ranks resolvers using both speed **and** reliability.
-- Separates unstable/unreachable resolvers from reliable recommendations.
-- Supports custom DNS servers and IPv6 DNS where available.
+**NetScope was created to replace guesswork with measurements.**
 
-### 📶 Network Diagnostics
-- Shows the current connection state and transport type.
-- Displays available IPv4, IPv6, and system DNS information.
-- Helps distinguish DNS problems from broader connectivity problems.
-- Provides additional DoH and DoT/TLS reachability checks.
+It focuses on the user’s current connection and reports what the app can actually measure. It does not pretend that a DNS response time is the same thing as an in-game ping, and it does not label a random TCP endpoint as a game server.
 
-### 🎮 Gaming Connectivity
-NetScope does **not** pretend that a TCP connection to an arbitrary host is the same thing as in-game latency.
+## ✨ What it can do
 
-Instead, Gaming Diagnostics provides transparent TCP connectivity/path checks with:
-- Latency
-- Jitter
-- Connection loss
-- Custom host/IP and port testing
-- Useful public connectivity targets such as Steam and Epic Games
+### 🌐 DNS Benchmark
 
-Results are reported as connectivity observations, not guaranteed game-server ping.
+- Direct DNS queries to selected resolvers over UDP/53
+- Real DNS response latency measurements
+- Average, median, minimum and maximum latency
+- Jitter, success rate and packet-loss-style failure rate
+- Primary/secondary fallback tracking
+- Reliability-aware scoring and ranking
+- Best DNS recommendation for the current connection
 
-### 📊 Results & History
-- Detailed per-DNS results
-- Per-request measurement details
+### ⚡ Quick Test
+
+Run a short DNS check when you want an answer quickly instead of a full benchmark.
+
+### 📡 Network Snapshot
+
+Inspect the connection information Android exposes to the app, including:
+
+- Online/offline state
+- Transport type
+- Internet validation
+- IPv4 and IPv6 information
+- Current DNS information
+
+### 🎮 Gaming & TCP Connectivity
+
+NetScope deliberately avoids calling TCP latency to a public endpoint **“in-game ping.”**
+
+The Gaming section checks TCP connectivity to selected public service endpoints, including **Steam** and **Epic Games**, and also lets the user enter a custom host/IP and port.
+
+Results are interpreted carefully:
+
+- 🟢 **Open** — the TCP connection was accepted.
+- 🔴 **Rejected / closed** — the destination explicitly rejected the connection.
+- 🟡 **No response / filtered** — no reliable response arrived within the test window.
+- ⚪ **Connection error** — another connection error occurred.
+
+> ⚠️ A timeout alone does **not** prove that a port is closed.
+
+### 🧠 Network Health
+
+A simple summary of the measured connection quality, so users can understand the result without digging through every technical value.
+
+### 🔬 Advanced Diagnostics
+
+- IPv6 DNS checks
+- DNS-over-HTTPS reachability
+- DNS-over-TLS / TLS 853 reachability
+
+### 📊 Results, Comparison & History
+
+- Per-DNS result details
+- Individual sample details
 - Compare multiple DNS resolvers
-- Copy DNS addresses and complete reports
-- Keep local test history and review previous results
+- Copy DNS values and reports
+- Local test history
+- Clear history when needed
 
-## 🎯 Why NetScope exists
+### 🎨 Clean Android-first UI
 
-Internet quality is not defined by a single ping number. A resolver can look extremely fast while dropping a large percentage of requests. A network can have a fast DNS response while suffering from high jitter or unstable TCP connectivity.
+- Persian RTL interface
+- Light, dark and system theme modes
+- Simple main dashboard
+- Advanced details kept behind dedicated screens
 
-NetScope is built around a simple idea:
+## 🧪 Measurement philosophy
 
-**Measure what actually happened, explain what the measurement means, and avoid claiming more than the test can prove.**
+NetScope intentionally keeps different measurements separate:
 
-## 🔬 Measurement philosophy
+| Measurement | What it means |
+|---|---|
+| DNS latency | Time to receive a DNS response |
+| DNS reliability | How consistently DNS queries receive a response |
+| TCP latency | Time to establish a TCP connection |
+| TCP connectivity | Whether a TCP connection can be established to the tested destination |
+| ICMP ping | Not claimed by NetScope’s DNS/TCP tests |
+| In-game ping | Not claimed unless a verified game-server measurement exists |
 
-NetScope tries to make its measurements understandable and reproducible:
+Results depend on the user’s ISP, routing, network conditions, destination and time of testing.
 
-- **DNS latency** = time between sending a DNS query and receiving the matching DNS response.
-- **Packet loss** = proportion of DNS attempts that did not receive a valid response within the test timeout.
-- **Jitter** = variation of successful DNS response times around their average.
-- **TCP latency** = time required to establish the tested TCP connection to the selected destination and port.
-- **Timeout is not automatically reported as "closed".** A timeout may also indicate filtering, routing problems, or an unreachable destination.
+## 🔐 Security & privacy
 
-The app does not use a third-party server to invent DNS latency values.
+NetScope is designed to perform its core diagnostics without an account, API key or intermediary measurement server.
 
-## 🔐 Privacy & security
+Android permissions are intentionally limited to the networking features the app needs:
 
-NetScope is designed as a local diagnostic tool.
+- `INTERNET` — network diagnostics
+- `ACCESS_NETWORK_STATE` — reading Android network state
 
-- No account is required.
-- No API key is required for the core tests.
-- Test history is stored locally on the device.
-- The app uses only the Android network permissions needed for diagnostics.
-- It does not include a DNS-changing/VPN feature.
-- It does not claim to bypass network restrictions.
+The project also keeps cleartext HTTP disabled and Android app backup disabled. No API keys, passwords, tokens or private signing keys belong in this repository.
 
-## 🧩 Technology
+For public releases, release signing credentials should be kept outside the repository and supplied securely by the build environment.
+
+## 🛠️ Built with
 
 - Flutter / Dart
 - Android-first architecture
 - Native Android network information through a platform channel
-- Direct UDP DNS probing on supported platforms
+- Direct UDP DNS probing
 - TCP connectivity diagnostics
-- Shared local preferences for settings and history
-- Persian RTL interface with Vazirmatn and Lalezar typography
+- `shared_preferences` for local settings and history
 
-## ⚠️ Important limitations
+## ▶️ Run locally
 
-NetScope is a diagnostic tool, not a guarantee of application or game performance.
+Requirements:
 
-A successful connection to a public host does not prove that every service, CDN, game server, or route is reachable. Likewise, a failed test to one destination does not prove that the entire service is blocked.
+- Flutter SDK
+- Android SDK
+- Android device or emulator
 
-Gaming results should therefore be interpreted as **network connectivity indicators**, not guaranteed in-game ping or matchmaking availability.
+```bash
+flutter pub get
+flutter run
+```
 
-## 🚀 Status
+Build a release APK:
 
-**Version:** `1.0.0`
-
-NetScope is currently being released as an early public version. Real-world testing across different networks is encouraged before treating measurements as universal conclusions.
+```bash
+flutter build apk --release
+```
 
 ## 🤝 Contributing
 
-Issues, testing feedback, bug reports, and improvements are welcome. If you find a misleading result or a measurement that does not behave as expected, please include the test conditions and relevant diagnostic details when possible.
+Bug reports, reproducible test results, measurement improvements and carefully sourced DNS/endpoint suggestions are welcome.
+
+Please prefer verifiable sources and repeatable measurements over undocumented lists or claims.
+
+## ⚠️ Important limitations
+
+- Network measurements are local observations, not universal rankings.
+- A DNS that is fast today may not be the best choice tomorrow.
+- DNS latency is not ICMP ping.
+- TCP connectivity is not the same as game-server latency.
+- A successful TCP connection to Steam or Epic Games does not prove that every game service or game server is reachable.
+- A timeout does not by itself prove that a port is closed.
+
+## ❤️ About
+
+NetScope is built around one simple idea:
+
+> **Honest measurement is better than guessing.**
+
+Built with ❤️ by **Gtrezabrm**.
 
 ## 📄 License
 
-This project is intended to be open source. See `LICENSE` for the applicable license terms.
+Choose and add the project license before the first public GitHub release.
