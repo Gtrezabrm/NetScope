@@ -1,0 +1,37 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+build/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Android generated files
+android/.gradle/
+android/app/build/
+android/local.properties
+android/.cxx/
+
+# iOS generated files
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Runner.xcworkspace/xcuserdata/
+
+# macOS / Windows / Linux generated files
+macos/Pods/
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# Logs
+*.log
+
+# Local environment / secrets
+.env
+.env.*
+*.jks
+*.keystore
+key.properties
