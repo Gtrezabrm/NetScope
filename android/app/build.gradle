@@ -15,6 +15,12 @@ if (localPropertiesFile.exists()) {
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "11"
 def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0.0"
 
+def releaseKeystorePath = System.getenv("NETSCOPE_KEYSTORE_PATH")
+def releaseKeystorePassword = System.getenv("NETSCOPE_KEYSTORE_PASSWORD")
+def releaseKeyAlias = System.getenv("NETSCOPE_KEY_ALIAS")
+
+def hasReleaseSigning = releaseKeystorePath && releaseKeystorePassword && releaseKeyAlias
+
 android {
     namespace "com.netscope.app"
     compileSdk 35
@@ -41,9 +47,23 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(releaseKeystorePath)
+                storePassword releaseKeystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeystorePassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            if (!hasReleaseSigning) {
+                throw new GradleException("Production signing is not configured. Set NETSCOPE_KEYSTORE_PATH, NETSCOPE_KEYSTORE_PASSWORD, and NETSCOPE_KEY_ALIAS.")
+            }
+            signingConfig signingConfigs.release
         }
     }
 }
